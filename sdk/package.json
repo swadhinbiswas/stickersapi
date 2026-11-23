@@ -1,0 +1,53 @@
+{
+  "name": "@stickerapi/sdk",
+  "version": "0.1.0",
+  "description": "Zero-dependency TypeScript SDK for the free StickersAPI: stickers, packs, emotes, Telegram sets, PFPs and banners.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "stickers",
+    "discord",
+    "emotes",
+    "telegram",
+    "pfps",
+    "banners",
+    "api",
+    "sdk"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/swadhinbiswas/stickersapi.git",
+    "directory": "sdk"
+  },
+  "homepage": "https://stickerapi.sbs/sdk",
+  "bugs": {
+    "url": "https://github.com/swadhinbiswas/stickersapi/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "sideEffects": false,
+  "devDependencies": {
+    "typescript": "^7.0.2"
+  }
+}

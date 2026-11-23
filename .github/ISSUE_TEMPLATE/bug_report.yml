@@ -1,0 +1,42 @@
+name: Bug report
+description: Report a problem with the SDK, bot example or OpenAPI spec
+labels: [bug]
+body:
+  - type: input
+    id: version
+    attributes:
+      label: SDK version or commit
+      placeholder: 0.1.0 or commit hash
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - SDK
+        - Discord bot example
+        - OpenAPI spec
+        - Documentation
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: What happened?
+      description: Include the error message and a minimal reproduction if possible.
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      placeholder: Node 22, npm 10, Linux
+    validations:
+      required: false

@@ -1,0 +1,2353 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "StickersAPI",
+    "version": "2.3.0",
+    "summary": "Free, unofficial sticker, emote, Telegram and PFP API",
+    "description": "Read-only API for stickers.gg stickers and packs, 7TV/BTTV/FFZ emotes, Telegram sticker sets, and pfps.gg profile pictures and banners.\n\nNo API keys. All endpoints are CORS-enabled and edge-cached. Try any request with **Send Request**.\n\n- [Documentation](https://stickerapi.sbs/docs)\n- [Guides](https://stickerapi.sbs/blog/)\n- [llms.txt](https://stickerapi.sbs/llms.txt)\n\nNot affiliated with stickers.gg, Discord, Telegram or pfps.gg. Content belongs to its uploaders and creators.",
+    "contact": {
+      "name": "StickersAPI",
+      "url": "https://stickerapi.sbs/about",
+      "email": "mail@stickerapi.sbs"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://stickerapi.sbs",
+      "description": "Production"
+    }
+  ],
+  "security": [],
+  "tags": [
+    {
+      "name": "Meta",
+      "description": "Health, endpoint index and source status."
+    },
+    {
+      "name": "Stickers",
+      "description": "Sticker metadata, listings, previews, downloads and embeds."
+    },
+    {
+      "name": "Packs",
+      "description": "Sticker packs, ZIP archives and pack listings."
+    },
+    {
+      "name": "Files",
+      "description": "Access any stickers.gg CDN file by filename."
+    },
+    {
+      "name": "Search",
+      "description": "Full-text sticker search."
+    },
+    {
+      "name": "Collections",
+      "description": "Build a custom ZIP from selected sticker filenames."
+    },
+    {
+      "name": "Emotes",
+      "description": "7TV, BetterTTV and FrankerFaceZ global emotes."
+    },
+    {
+      "name": "Telegram",
+      "description": "Public Telegram sticker sets. The bot token stays server-side; clients never send one."
+    },
+    {
+      "name": "PFPs",
+      "description": "Profile pictures from pfps.gg."
+    },
+    {
+      "name": "Banners",
+      "description": "Profile banners from pfps.gg."
+    }
+  ],
+  "paths": {
+    "/api": {
+      "get": {
+        "tags": [
+          "Meta"
+        ],
+        "operationId": "getEndpointIndex",
+        "summary": "Endpoint index",
+        "description": "Machine-readable list of every endpoint, the API version and links to the landing page and docs.",
+        "responses": {
+          "200": {
+            "description": "Endpoint index",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EndpointIndex"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/health": {
+      "get": {
+        "tags": [
+          "Meta"
+        ],
+        "operationId": "getHealth",
+        "summary": "Health check",
+        "responses": {
+          "200": {
+            "description": "API is up",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Health"
+                },
+                "example": {
+                  "status": "ok",
+                  "runtime": "cloudflare-workers"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/sources": {
+      "get": {
+        "tags": [
+          "Meta"
+        ],
+        "operationId": "getSources",
+        "summary": "Source status",
+        "description": "Every sticker/emote source, its status and the endpoints it powers. Telegram shows whether the server-side token is configured.",
+        "responses": {
+          "200": {
+            "description": "Source list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SourcesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/stickers": {
+      "get": {
+        "tags": [
+          "Stickers"
+        ],
+        "operationId": "listStickers",
+        "summary": "List stickers",
+        "description": "Browse stickers by tag with sorting and pagination, or ask for a random selection.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Tag"
+          },
+          {
+            "$ref": "#/components/parameters/Sort"
+          },
+          {
+            "$ref": "#/components/parameters/Page"
+          },
+          {
+            "$ref": "#/components/parameters/Random"
+          },
+          {
+            "$ref": "#/components/parameters/Count"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sticker listing",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StickerListing"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        }
+      }
+    },
+    "/api/stickers/random": {
+      "get": {
+        "tags": [
+          "Stickers"
+        ],
+        "operationId": "listRandomStickers",
+        "summary": "Random stickers",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Count"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Random sticker list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RandomStickerResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/sticker/random": {
+      "get": {
+        "tags": [
+          "Stickers"
+        ],
+        "operationId": "getRandomSticker",
+        "summary": "Random sticker",
+        "responses": {
+          "200": {
+            "description": "A random sticker with full metadata",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Sticker"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/sticker/{slug}": {
+      "get": {
+        "tags": [
+          "Stickers"
+        ],
+        "operationId": "getSticker",
+        "summary": "Sticker metadata",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/StickerSlug"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sticker record",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Sticker"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/sticker/{slug}/preview": {
+      "get": {
+        "tags": [
+          "Stickers"
+        ],
+        "operationId": "previewSticker",
+        "summary": "Sticker preview image",
+        "description": "Streams the sticker image. Add `?raw=1` to redirect to the CDN instead of proxying.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/StickerSlug"
+          },
+          {
+            "$ref": "#/components/parameters/Raw"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Image"
+          },
+          "302": {
+            "$ref": "#/components/responses/Redirect"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/sticker/{slug}/download": {
+      "get": {
+        "tags": [
+          "Stickers"
+        ],
+        "operationId": "downloadSticker",
+        "summary": "Download sticker",
+        "description": "Returns the sticker as an attachment with its original filename.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/StickerSlug"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sticker file",
+            "headers": {
+              "Content-Disposition": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "attachment; filename=\"4238-cat-pee.gif\""
+              }
+            },
+            "content": {
+              "image/*": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/sticker/{slug}/embed": {
+      "get": {
+        "tags": [
+          "Stickers"
+        ],
+        "operationId": "embedSticker",
+        "summary": "Embeddable HTML card",
+        "description": "A minimal HTML page that embeds the sticker preview. Useful for iframes and previews.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/StickerSlug"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "HTML embed",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/packs": {
+      "get": {
+        "tags": [
+          "Packs"
+        ],
+        "operationId": "listPacks",
+        "summary": "List packs",
+        "description": "Browse packs by tag with pagination, or request a random selection.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Tag"
+          },
+          {
+            "$ref": "#/components/parameters/Page"
+          },
+          {
+            "$ref": "#/components/parameters/Random"
+          },
+          {
+            "$ref": "#/components/parameters/Count"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Pack listing",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PackListing"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        }
+      }
+    },
+    "/api/packs/random": {
+      "get": {
+        "tags": [
+          "Packs"
+        ],
+        "operationId": "listRandomPacks",
+        "summary": "Random packs",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Count"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Random pack list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RandomPackResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/pack/random": {
+      "get": {
+        "tags": [
+          "Packs"
+        ],
+        "operationId": "getRandomPack",
+        "summary": "Random pack",
+        "responses": {
+          "200": {
+            "description": "A random pack with its full sticker list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pack"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/pack/{slug}": {
+      "get": {
+        "tags": [
+          "Packs"
+        ],
+        "operationId": "getPack",
+        "summary": "Pack metadata",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/PackSlug"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Pack record with the full sticker list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pack"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/pack/{slug}/download": {
+      "get": {
+        "tags": [
+          "Packs"
+        ],
+        "operationId": "downloadPack",
+        "summary": "Download pack as ZIP",
+        "description": "Builds a ZIP of the pack. ZIPs are capped at 48 stickers by default (`MAX_ZIP_FILES`); larger packs return 400.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/PackSlug"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ZIP archive",
+            "headers": {
+              "X-File-Count": {
+                "schema": {
+                  "type": "integer"
+                },
+                "example": 11
+              }
+            },
+            "content": {
+              "application/zip": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/file/{file}/preview": {
+      "get": {
+        "tags": [
+          "Files"
+        ],
+        "operationId": "previewFile",
+        "summary": "Preview any CDN file",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/CdnFile"
+          },
+          {
+            "$ref": "#/components/parameters/Raw"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Image"
+          },
+          "302": {
+            "$ref": "#/components/responses/Redirect"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        }
+      }
+    },
+    "/api/file/{file}/download": {
+      "get": {
+        "tags": [
+          "Files"
+        ],
+        "operationId": "downloadFile",
+        "summary": "Download any CDN file",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/CdnFile"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "File attachment",
+            "content": {
+              "image/*": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        }
+      }
+    },
+    "/api/search": {
+      "get": {
+        "tags": [
+          "Search"
+        ],
+        "operationId": "searchStickers",
+        "summary": "Search stickers",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "description": "Search text (1-100 characters)",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "example": "cute cat"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum results (1-100, default 50)",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50
+            },
+            "example": 10
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Matching stickers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          }
+        },
+        "description": "Full-text sticker search. Returns up to 100 results, 50 by default."
+      }
+    },
+    "/api/collection/zip": {
+      "post": {
+        "tags": [
+          "Collections"
+        ],
+        "operationId": "createCollectionZip",
+        "summary": "ZIP a custom selection",
+        "description": "Builds a ZIP from up to 48 stickers.gg CDN filenames. Rate limited to 20 builds per minute per IP.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "files"
+                ],
+                "properties": {
+                  "files": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 48,
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "stickers.gg CDN filenames"
+                  }
+                }
+              },
+              "example": {
+                "files": [
+                  "2223-charlie.png",
+                  "8139-shocked-cat.jpg"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ZIP archive",
+            "headers": {
+              "X-File-Count": {
+                "schema": {
+                  "type": "integer"
+                },
+                "example": 2
+              }
+            },
+            "content": {
+              "application/zip": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          }
+        }
+      }
+    },
+    "/api/emotes": {
+      "get": {
+        "tags": [
+          "Emotes"
+        ],
+        "operationId": "listEmotes",
+        "summary": "List emotes",
+        "parameters": [
+          {
+            "name": "source",
+            "in": "query",
+            "description": "Emote provider",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "all",
+                "7tv",
+                "bttv",
+                "ffz"
+              ],
+              "default": "all"
+            },
+            "example": "all"
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "description": "Optional name filter",
+            "schema": {
+              "type": "string",
+              "maxLength": 100
+            },
+            "example": "cat"
+          },
+          {
+            "$ref": "#/components/parameters/EmoteLimit"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Emote list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmoteList"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        }
+      }
+    },
+    "/api/emote/{source}/{id}/preview": {
+      "get": {
+        "tags": [
+          "Emotes"
+        ],
+        "operationId": "previewEmote",
+        "summary": "Emote preview image",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/EmoteSource"
+          },
+          {
+            "$ref": "#/components/parameters/EmoteId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Image"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/emote/{source}/{id}/download": {
+      "get": {
+        "tags": [
+          "Emotes"
+        ],
+        "operationId": "downloadEmote",
+        "summary": "Download emote",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/EmoteSource"
+          },
+          {
+            "$ref": "#/components/parameters/EmoteId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Emote image attachment",
+            "content": {
+              "image/*": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        }
+      }
+    },
+    "/api/telegram/stickers/{set}": {
+      "get": {
+        "tags": [
+          "Telegram"
+        ],
+        "operationId": "getTelegramSet",
+        "summary": "Telegram sticker set",
+        "description": "Reads a public Telegram sticker set. The bot token is held by the server and is never required from clients. Self-hosted deployments must set `TELEGRAM_BOT_TOKEN`.",
+        "parameters": [
+          {
+            "name": "set",
+            "in": "path",
+            "required": true,
+            "description": "Telegram set name, for example `UtyaDuck`",
+            "schema": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9_]{1,64}$"
+            },
+            "example": "UtyaDuck"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sticker set",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TelegramSet"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "503": {
+            "$ref": "#/components/responses/Unavailable"
+          }
+        }
+      }
+    },
+    "/api/telegram/file/{id}/preview": {
+      "get": {
+        "tags": [
+          "Telegram"
+        ],
+        "operationId": "previewTelegramFile",
+        "summary": "Telegram sticker preview",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/TelegramFileId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Image"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "503": {
+            "$ref": "#/components/responses/Unavailable"
+          }
+        }
+      }
+    },
+    "/api/telegram/file/{id}/download": {
+      "get": {
+        "tags": [
+          "Telegram"
+        ],
+        "operationId": "downloadTelegramFile",
+        "summary": "Telegram sticker download",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/TelegramFileId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sticker file attachment",
+            "content": {
+              "image/*": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "503": {
+            "$ref": "#/components/responses/Unavailable"
+          }
+        }
+      }
+    },
+    "/api/pfps": {
+      "get": {
+        "tags": [
+          "PFPs"
+        ],
+        "operationId": "listPfps",
+        "summary": "List PFPs",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/PfpsTagQuery"
+          },
+          {
+            "$ref": "#/components/parameters/Page"
+          },
+          {
+            "$ref": "#/components/parameters/PfpsSort"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "PFP listing",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PfpListing"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/pfps/{tag}": {
+      "get": {
+        "tags": [
+          "PFPs"
+        ],
+        "operationId": "listPfpsByTag",
+        "summary": "List PFPs by tag",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/PfpsTagPath"
+          },
+          {
+            "$ref": "#/components/parameters/Page"
+          },
+          {
+            "$ref": "#/components/parameters/PfpsSort"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "PFP listing",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PfpListing"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/pfp/{slug}": {
+      "get": {
+        "tags": [
+          "PFPs"
+        ],
+        "operationId": "getPfp",
+        "summary": "PFP metadata",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/PfpSlug"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "PFP record",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PfpDetail"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/pfp/{slug}/preview": {
+      "get": {
+        "tags": [
+          "PFPs"
+        ],
+        "operationId": "previewPfp",
+        "summary": "PFP preview image",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/PfpSlug"
+          },
+          {
+            "$ref": "#/components/parameters/Raw"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Image"
+          },
+          "302": {
+            "$ref": "#/components/responses/Redirect"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/pfp/{slug}/download": {
+      "get": {
+        "tags": [
+          "PFPs"
+        ],
+        "operationId": "downloadPfp",
+        "summary": "Download PFP",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/PfpSlug"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "PFP image attachment",
+            "content": {
+              "image/*": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/banners": {
+      "get": {
+        "tags": [
+          "Banners"
+        ],
+        "operationId": "listBanners",
+        "summary": "List banners",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/PfpsTagQuery"
+          },
+          {
+            "$ref": "#/components/parameters/Page"
+          },
+          {
+            "$ref": "#/components/parameters/PfpsSort"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Banner listing",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BannerListing"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/banners/{tag}": {
+      "get": {
+        "tags": [
+          "Banners"
+        ],
+        "operationId": "listBannersByTag",
+        "summary": "List banners by tag",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/PfpsTagPath"
+          },
+          {
+            "$ref": "#/components/parameters/Page"
+          },
+          {
+            "$ref": "#/components/parameters/PfpsSort"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Banner listing",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BannerListing"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/banner/{slug}": {
+      "get": {
+        "tags": [
+          "Banners"
+        ],
+        "operationId": "getBanner",
+        "summary": "Banner metadata",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/BannerSlug"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Banner record",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PfpDetail"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/banner/{slug}/preview": {
+      "get": {
+        "tags": [
+          "Banners"
+        ],
+        "operationId": "previewBanner",
+        "summary": "Banner preview image",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/BannerSlug"
+          },
+          {
+            "$ref": "#/components/parameters/Raw"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Image"
+          },
+          "302": {
+            "$ref": "#/components/responses/Redirect"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/banner/{slug}/download": {
+      "get": {
+        "tags": [
+          "Banners"
+        ],
+        "operationId": "downloadBanner",
+        "summary": "Download banner",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/BannerSlug"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Banner image attachment",
+            "content": {
+              "image/*": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "Tag": {
+        "name": "tag",
+        "in": "query",
+        "description": "Stickers.gg tag or `latest`",
+        "schema": {
+          "type": "string"
+        },
+        "example": "cat"
+      },
+      "Sort": {
+        "name": "sort",
+        "in": "query",
+        "description": "Sort order for sticker listings",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "latest",
+            "oldest",
+            "downloads",
+            "recent"
+          ]
+        },
+        "example": "downloads"
+      },
+      "Page": {
+        "name": "page",
+        "in": "query",
+        "description": "1-based page number (maximum 500)",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 500,
+          "default": 1
+        },
+        "example": 1
+      },
+      "Random": {
+        "name": "random",
+        "in": "query",
+        "description": "Set to true to return a random selection instead of a paginated listing",
+        "schema": {
+          "type": "boolean"
+        },
+        "example": false
+      },
+      "Count": {
+        "name": "count",
+        "in": "query",
+        "description": "Number of random items (1-100 for stickers, 1-50 for packs)",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 10
+        },
+        "example": 5
+      },
+      "Raw": {
+        "name": "raw",
+        "in": "query",
+        "description": "Set to 1 to redirect to the upstream CDN instead of proxying",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "1"
+          ]
+        },
+        "example": "1"
+      },
+      "StickerSlug": {
+        "name": "slug",
+        "in": "path",
+        "required": true,
+        "description": "Sticker slug, for example `4238-cat-pee`",
+        "schema": {
+          "type": "string"
+        },
+        "example": "4238-cat-pee"
+      },
+      "PackSlug": {
+        "name": "slug",
+        "in": "path",
+        "required": true,
+        "description": "Pack slug, for example `7214-best-pepe-pack`",
+        "schema": {
+          "type": "string"
+        },
+        "example": "7214-best-pepe-pack"
+      },
+      "CdnFile": {
+        "name": "file",
+        "in": "path",
+        "required": true,
+        "description": "stickers.gg CDN filename",
+        "schema": {
+          "type": "string"
+        },
+        "example": "2223-charlie.png"
+      },
+      "EmoteSource": {
+        "name": "source",
+        "in": "path",
+        "required": true,
+        "description": "Emote provider",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "7tv",
+            "bttv",
+            "ffz"
+          ]
+        },
+        "example": "bttv"
+      },
+      "EmoteId": {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "description": "Provider-specific emote id",
+        "schema": {
+          "type": "string"
+        },
+        "example": "54fa8f1401e468494b85b537"
+      },
+      "EmoteLimit": {
+        "name": "limit",
+        "in": "query",
+        "description": "Maximum emotes to return (1-200)",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 200,
+          "default": 50
+        },
+        "example": 10
+      },
+      "TelegramFileId": {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "description": "Telegram file id from a sticker set response (fileId or thumbnailFileId)",
+        "schema": {
+          "type": "string"
+        },
+        "example": "AAMCAgADFQABawPuVVuNp4hv7ilpTPGR19IRiTEAAvIAA1advQoQnYt2U3rSZAEAB20AAz0E"
+      },
+      "PfpsTagQuery": {
+        "name": "tag",
+        "in": "query",
+        "description": "pfps.gg tag, or `latest`",
+        "schema": {
+          "type": "string"
+        },
+        "example": "cats"
+      },
+      "PfpsTagPath": {
+        "name": "tag",
+        "in": "path",
+        "required": true,
+        "description": "pfps.gg tag, for example `cats`",
+        "schema": {
+          "type": "string"
+        },
+        "example": "cats"
+      },
+      "PfpsSort": {
+        "name": "sort",
+        "in": "query",
+        "description": "pfps.gg sort order",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "featured",
+            "latest",
+            "oldest",
+            "downloads",
+            "recent"
+          ]
+        },
+        "example": "featured"
+      },
+      "PfpSlug": {
+        "name": "slug",
+        "in": "path",
+        "required": true,
+        "description": "PFP slug from a listing",
+        "schema": {
+          "type": "string"
+        },
+        "example": "11334-cat"
+      },
+      "BannerSlug": {
+        "name": "slug",
+        "in": "path",
+        "required": true,
+        "description": "Banner slug from a listing",
+        "schema": {
+          "type": "string"
+        },
+        "example": "24766-254701-tsuki"
+      }
+    },
+    "responses": {
+      "BadRequest": {
+        "description": "Invalid input",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "example": {
+              "error": "Invalid tag"
+            }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "Not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "example": {
+              "error": "Sticker not found on stickers.gg"
+            }
+          }
+        }
+      },
+      "RateLimited": {
+        "description": "Rate limit exceeded",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "example": {
+              "error": "Too many requests, try again shortly"
+            }
+          }
+        }
+      },
+      "Unavailable": {
+        "description": "The upstream or a server-side integration is unavailable",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "example": {
+              "error": "Telegram is not configured on this instance"
+            }
+          }
+        }
+      },
+      "Image": {
+        "description": "Image bytes",
+        "content": {
+          "image/*": {
+            "schema": {
+              "type": "string",
+              "format": "binary"
+            }
+          }
+        }
+      },
+      "Redirect": {
+        "description": "Redirect to the upstream CDN",
+        "headers": {
+          "Location": {
+            "schema": {
+              "type": "string",
+              "format": "uri"
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "required": [
+          "error"
+        ],
+        "properties": {
+          "error": {
+            "type": "string"
+          }
+        }
+      },
+      "Health": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "ok"
+          },
+          "runtime": {
+            "type": "string",
+            "example": "cloudflare-workers"
+          }
+        }
+      },
+      "Endpoint": {
+        "type": "object",
+        "properties": {
+          "method": {
+            "type": "string",
+            "example": "GET"
+          },
+          "path": {
+            "type": "string",
+            "example": "/api/sticker/:slug"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      },
+      "EndpointIndex": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "landing": {
+            "type": "string"
+          },
+          "docs": {
+            "type": "string"
+          },
+          "endpoints": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Endpoint"
+            }
+          }
+        }
+      },
+      "Source": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "configured": {
+            "type": "boolean"
+          },
+          "endpoints": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "note": {
+            "type": "string"
+          }
+        }
+      },
+      "SourcesResponse": {
+        "type": "object",
+        "properties": {
+          "sources": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Source"
+            }
+          }
+        }
+      },
+      "Uploader": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "@LiveLaughLoveMorena"
+          },
+          "url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri"
+          }
+        }
+      },
+      "StickerListItem": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "example": "4238-cat-pee"
+          },
+          "name": {
+            "type": "string",
+            "example": "Cat pee"
+          },
+          "image": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri"
+          },
+          "downloads": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "type": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "example": "gif"
+          },
+          "page": {
+            "type": "string",
+            "example": "/api/sticker/4238-cat-pee"
+          },
+          "preview": {
+            "type": "string"
+          },
+          "download": {
+            "type": "string"
+          }
+        }
+      },
+      "Sticker": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "const": "sticker"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "image": {
+            "type": "string",
+            "format": "uri"
+          },
+          "file": {
+            "type": "string"
+          },
+          "type": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "mimeType": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "size": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "dimensions": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "downloads": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "added": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "stickerId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "uploader": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Uploader"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "botCommand": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "page": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "preview": {
+            "type": "string"
+          },
+          "download": {
+            "type": "string"
+          },
+          "embed": {
+            "type": "string"
+          },
+          "related": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StickerListItem"
+            }
+          }
+        }
+      },
+      "PackSticker": {
+        "type": "object",
+        "properties": {
+          "file": {
+            "type": "string",
+            "example": "1057-pepe-popcorn.png"
+          },
+          "image": {
+            "type": "string",
+            "format": "uri"
+          },
+          "preview": {
+            "type": "string"
+          },
+          "download": {
+            "type": "string"
+          }
+        }
+      },
+      "Pack": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "const": "pack"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "stickers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PackSticker"
+            }
+          },
+          "count": {
+            "type": "integer"
+          },
+          "downloads": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "added": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "uploader": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Uploader"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "page": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "downloadUrl": {
+            "type": "string"
+          },
+          "zipName": {
+            "type": "string"
+          }
+        }
+      },
+      "PackListItem": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "example": "7214-best-pepe-pack"
+          },
+          "name": {
+            "type": "string"
+          },
+          "count": {
+            "type": "integer"
+          },
+          "previews": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          "page": {
+            "type": "string"
+          },
+          "download": {
+            "type": "string"
+          }
+        }
+      },
+      "StickerListing": {
+        "type": "object",
+        "properties": {
+          "tag": {
+            "type": "string"
+          },
+          "sort": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "page": {
+            "type": "integer"
+          },
+          "nextPage": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "source": {
+            "type": "string",
+            "format": "uri"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StickerListItem"
+            }
+          }
+        }
+      },
+      "PackListing": {
+        "type": "object",
+        "properties": {
+          "tag": {
+            "type": "string"
+          },
+          "page": {
+            "type": "integer"
+          },
+          "nextPage": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "source": {
+            "type": "string",
+            "format": "uri"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PackListItem"
+            }
+          }
+        }
+      },
+      "RandomStickerResponse": {
+        "type": "object",
+        "properties": {
+          "random": {
+            "type": "boolean",
+            "const": true
+          },
+          "count": {
+            "type": "integer"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StickerListItem"
+            }
+          }
+        }
+      },
+      "RandomPackResponse": {
+        "type": "object",
+        "properties": {
+          "random": {
+            "type": "boolean",
+            "const": true
+          },
+          "count": {
+            "type": "integer"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PackListItem"
+            }
+          }
+        }
+      },
+      "SearchResponse": {
+        "type": "object",
+        "properties": {
+          "q": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string",
+            "format": "uri"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StickerListItem"
+            }
+          },
+          "limit": {
+            "type": "integer",
+            "example": 50
+          },
+          "count": {
+            "type": "integer",
+            "example": 50
+          }
+        }
+      },
+      "Emote": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string",
+            "enum": [
+              "7tv",
+              "bttv",
+              "ffz"
+            ]
+          },
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "example": "webp"
+          },
+          "animated": {
+            "type": "boolean"
+          },
+          "width": {
+            "type": "integer"
+          },
+          "height": {
+            "type": "integer"
+          },
+          "image": {
+            "type": "string",
+            "format": "uri"
+          },
+          "preview": {
+            "type": "string",
+            "format": "uri"
+          },
+          "page": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri"
+          }
+        }
+      },
+      "EmoteList": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string",
+            "enum": [
+              "all",
+              "7tv",
+              "bttv",
+              "ffz"
+            ]
+          },
+          "q": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "count": {
+            "type": "integer"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Emote"
+            }
+          },
+          "unavailable": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "TelegramSticker": {
+        "type": "object",
+        "properties": {
+          "fileId": {
+            "type": "string"
+          },
+          "fileUniqueId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "emoji": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "type": {
+            "type": "string"
+          },
+          "width": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "height": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "isAnimated": {
+            "type": "boolean"
+          },
+          "isVideo": {
+            "type": "boolean"
+          },
+          "fileSize": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "thumbnailFileId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "preview": {
+            "type": "string"
+          },
+          "download": {
+            "type": "string"
+          }
+        }
+      },
+      "TelegramSet": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string",
+            "const": "telegram"
+          },
+          "name": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "stickerType": {
+            "type": "string"
+          },
+          "count": {
+            "type": "integer"
+          },
+          "stickers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TelegramSticker"
+            }
+          }
+        }
+      },
+      "PfpItem": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "pfp",
+              "banner"
+            ]
+          },
+          "slug": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string",
+            "format": "uri"
+          },
+          "page": {
+            "type": "string",
+            "format": "uri"
+          },
+          "api": {
+            "type": "string"
+          },
+          "preview": {
+            "type": "string"
+          },
+          "download": {
+            "type": "string"
+          }
+        }
+      },
+      "PfpListing": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "pfps",
+              "banners"
+            ]
+          },
+          "tag": {
+            "type": "string"
+          },
+          "sort": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "page": {
+            "type": "integer"
+          },
+          "nextPage": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "source": {
+            "type": "string",
+            "format": "uri"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PfpItem"
+            }
+          }
+        }
+      },
+      "BannerListing": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "const": "banners"
+          },
+          "tag": {
+            "type": "string"
+          },
+          "sort": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "page": {
+            "type": "integer"
+          },
+          "nextPage": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "source": {
+            "type": "string",
+            "format": "uri"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PfpItem"
+            }
+          }
+        }
+      },
+      "PfpDetail": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/PfpItem"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "description": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "author": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "related": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/PfpItem"
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}
