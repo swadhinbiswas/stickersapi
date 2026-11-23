@@ -19,11 +19,7 @@ steps:
       - docker#v5.8.0:
           image: "node:22"
           workdir: "/app"
-    command:
-      - "cd sdk"
-      - "npm ci"
-      - "npm run build"
-      - "npm run typecheck"
+    command: "cd sdk && npm ci && npm run build && npm run typecheck"
 
   - label: ":discord: Check Discord bot"
     key: "bot-check"
@@ -32,8 +28,7 @@ steps:
       - docker#v5.8.0:
           image: "node:22"
           workdir: "/app"
-    command:
-      - "node --check examples/discord-bot/index.js"
+    command: "node --check examples/discord-bot/index.js"
 
   - label: ":npm: Publish SDK to npm"
     key: "npm-publish"
@@ -47,5 +42,4 @@ steps:
           environment:
             - "NPM_TOKEN"
             - "NPM_USER_NAME"
-    command:
-      - ".buildkite/publish-sdk.sh"
+    command: ".buildkite/publish-sdk.sh"
