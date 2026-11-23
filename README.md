@@ -4,8 +4,6 @@ Official TypeScript SDK, Discord bot example and OpenAPI spec for [StickersAPI](
 
 [Website](https://stickerapi.sbs/) · [Documentation](https://stickerapi.sbs/docs) · [Interactive Reference](https://stickerapi.sbs/reference) · [Tools](https://stickerapi.sbs/tools) · [SDK page](https://stickerapi.sbs/sdk) · [PFPs](https://stickerapi.sbs/pfps) · [Banners](https://stickerapi.sbs/banners)
 
-[![CI](https://github.com/swadhinbiswas/stickersapi/actions/workflows/ci.yml/badge.svg)](https://github.com/swadhinbiswas/stickersapi/actions/workflows/ci.yml)
-
 > StickersAPI is unofficial and not affiliated with stickers.gg, Discord, Telegram or pfps.gg. All sticker, emote, PFP and banner content belongs to its uploaders and creators. The hosted API and production server code are not part of this repository.
 
 ## Contents
@@ -119,7 +117,7 @@ npm run build
 node --check examples/discord-bot/index.js
 ```
 
-CI runs both on every push and pull request.
+The repository includes a GitHub Actions workflow for both checks.
 
 ## Security
 
