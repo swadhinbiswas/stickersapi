@@ -45,7 +45,7 @@ git tag v0.1.1
 git push origin main --tags
 ```
 
-Buildkite checks that the tag matches `sdk/package.json`, verifies the npm user, and publishes `@stickerapi/sdk` with public access.
+Buildkite checks that the tag matches `sdk/package.json`, verifies the npm user, and publishes `stickersapi` with public access.
 
 To publish the current `0.1.0` release, create a Buildkite build for the existing `v0.1.0` tag after the pipeline is connected.
 

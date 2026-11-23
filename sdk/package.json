@@ -1,5 +1,5 @@
 {
-  "name": "@stickerapi/sdk",
+  "name": "stickersapi",
   "version": "0.1.0",
   "description": "Zero-dependency TypeScript SDK for the free StickersAPI: stickers, packs, emotes, Telegram sets, PFPs and banners.",
   "type": "module",

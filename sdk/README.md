@@ -23,13 +23,13 @@ npm install /path/to/stickersapi/sdk
 When published to npm:
 
 ```bash
-npm install @stickerapi/sdk
+npm install stickersapi
 ```
 
 ## Quick start
 
 ```ts
-import { StickersAPI } from '@stickerapi/sdk';
+import { StickersAPI } from 'stickersapi';
 
 const api = new StickersAPI();
 
@@ -106,7 +106,7 @@ const api = new StickersAPI({ fetch: myFetch });
 Failed requests throw `StickersAPIError` with `status`, `message` and the parsed `body`:
 
 ```ts
-import { StickersAPIError } from '@stickerapi/sdk';
+import { StickersAPIError } from 'stickersapi';
 
 try {
   await api.getSticker('missing');

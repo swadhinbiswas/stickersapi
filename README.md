@@ -69,7 +69,7 @@ npm install /path/to/stickersapi/sdk
 When the package is published to npm:
 
 ```bash
-npm install @stickerapi/sdk
+npm install stickersapi
 ```
 
 ## SDK
@@ -147,7 +147,7 @@ const bytes = new Uint8Array(await response.arrayBuffer());
 <summary><strong>Errors</strong></summary>
 
 ```ts
-import { StickersAPIError } from '@stickerapi/sdk';
+import { StickersAPIError } from 'stickersapi';
 
 try {
   await api.getSticker('missing');
@@ -295,7 +295,7 @@ node --check examples/discord-bot/index.js
 
 ## CI/CD
 
-The included Buildkite pipeline builds the SDK, checks the Discord bot and publishes `@stickerapi/sdk` to npm on version tags.
+The included Buildkite pipeline builds the SDK, checks the Discord bot and publishes `stickersapi` to npm on version tags.
 
 - Pipeline: [`.buildkite/pipeline.yml`](.buildkite/pipeline.yml)
 - Publish script: [`.buildkite/publish-sdk.sh`](.buildkite/publish-sdk.sh)
@@ -320,7 +320,7 @@ git tag v0.1.1
 git push origin main --tags
 ```
 
-Buildkite checks that the tag matches `sdk/package.json`, verifies the npm user, and publishes `@stickerapi/sdk` with `--access public`.
+Buildkite checks that the tag matches `sdk/package.json`, verifies the npm user, and publishes `stickersapi` with `--access public`.
 
 To publish the current `0.1.0` release, connect the pipeline and run a build for the existing `v0.1.0` tag.
 

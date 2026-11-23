@@ -2,7 +2,7 @@
 # Docs: https://buildkite.com/docs/pipelines
 #
 # Required Buildkite environment variables:
-#   NPM_TOKEN      npm automation token with publish access to @stickerapi/sdk
+#   NPM_TOKEN      npm automation token with publish access to stickersapi
 #   NPM_USER_NAME  expected npm username (stickerapi)
 #
 # The agent queue must have Docker available. Change `queue` if your agent uses

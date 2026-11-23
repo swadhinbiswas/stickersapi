@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Publish @stickerapi/sdk to npm from a Buildkite tag build.
+# Publish stickersapi to npm from a Buildkite tag build.
 # Required environment: NPM_TOKEN
 # Optional: NPM_USER_NAME (defaults to stickerapi) for a sanity check.
 #
@@ -42,13 +42,13 @@ fi
 npm ci
 npm run build
 
-PUBLISHED_VERSION="$(npm view @stickerapi/sdk version 2>/dev/null || true)"
+PUBLISHED_VERSION="$(npm view stickersapi version 2>/dev/null || true)"
 if [ "$PUBLISHED_VERSION" = "$PACKAGE_VERSION" ]; then
-  echo "@stickerapi/sdk@$PACKAGE_VERSION is already published; nothing to do."
+  echo "stickersapi@$PACKAGE_VERSION is already published; nothing to do."
   exit 0
 fi
 
-echo "Publishing @stickerapi/sdk@$PACKAGE_VERSION"
+echo "Publishing stickersapi@$PACKAGE_VERSION"
 npm publish --access public
 
-echo "Published @stickerapi/sdk@$PACKAGE_VERSION"
+echo "Published stickersapi@$PACKAGE_VERSION"
