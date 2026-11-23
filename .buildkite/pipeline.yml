@@ -32,7 +32,9 @@ steps:
 
   - label: ":npm: Publish SDK to npm"
     key: "npm-publish"
-    depends_on: "sdk-build"
+    depends_on:
+      - "sdk-build"
+      - "bot-check"
     if: build.tag != null
     timeout_in_minutes: 20
     plugins:
