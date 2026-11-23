@@ -18,6 +18,7 @@
   <a href="https://stickerapi.sbs/api/health"><img src="https://img.shields.io/badge/API-live-22C55E?style=flat-square" alt="API live" /></a>
   <a href="https://github.com/swadhinbiswas/stickersapi/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-8B5CF6?style=flat-square" alt="MIT license" /></a>
   <a href="https://github.com/swadhinbiswas/stickersapi/releases"><img src="https://img.shields.io/github/v/release/swadhinbiswas/stickersapi?style=flat-square&color=8B5CF6" alt="Latest release" /></a>
+  <a href="https://buildkite.com/"><img src="https://img.shields.io/badge/CI-Buildkite-14CC80?style=flat-square&logo=buildkite&logoColor=white" alt="CI: Buildkite" /></a>
 </p>
 
 <p align="center">
@@ -239,7 +240,7 @@ See [`examples/discord-bot/README.md`](examples/discord-bot/README.md) for the f
 | `examples/discord-bot/` | Complete discord.js bot with env example |
 | `openapi.json` | OpenAPI 3.1 document for all 35 operations |
 | `assets/` | Logo, banner and screenshots for this README |
-| `.github/workflows/ci.yml` | SDK build and bot syntax check |
+| `.buildkite/` | Buildkite pipeline, npm publish script and setup guide |
 | `SECURITY.md` | Vulnerability reporting policy |
 | `CONTRIBUTING.md` | Contribution guidelines |
 
@@ -278,6 +279,7 @@ The public API handles caching, coalescing, rate limits and image proxying. This
 | Discord bot | discord.js v14 |
 | Live endpoint checks | 45 passing |
 | Runtime | Cloudflare Workers |
+| CI/CD | Buildkite |
 
 ## Development
 
@@ -291,7 +293,36 @@ npm run build
 node --check examples/discord-bot/index.js
 ```
 
-The repository includes a GitHub Actions workflow for both checks.
+## CI/CD
+
+Buildkite builds the SDK, checks the Discord bot and publishes `@stickerapi/sdk` to npm on version tags.
+
+- Pipeline: [`.buildkite/pipeline.yml`](.buildkite/pipeline.yml)
+- Publish script: [`.buildkite/publish-sdk.sh`](.buildkite/publish-sdk.sh)
+- Setup guide: [`.buildkite/README.md`](.buildkite/README.md)
+
+The pipeline expects these Buildkite environment variables:
+
+| Name | Purpose |
+|---|---|
+| `NPM_TOKEN` | npm automation token with publish access |
+| `NPM_USER_NAME` | expected npm user, `stickerapi` |
+
+Release the SDK with a version tag:
+
+```bash
+cd sdk
+npm version patch --no-git-tag-version
+cd ..
+git add sdk/package.json sdk/package-lock.json
+git commit -m "release: sdk v0.1.1"
+git tag v0.1.1
+git push origin main --tags
+```
+
+Buildkite checks that the tag matches `sdk/package.json`, verifies the npm user, and publishes `@stickerapi/sdk` with `--access public`.
+
+To publish the current `0.1.0` release, connect the pipeline and run a build for the existing `v0.1.0` tag.
 
 ## Security
 

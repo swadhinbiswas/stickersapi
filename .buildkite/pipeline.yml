@@ -1,0 +1,51 @@
+# Buildkite pipeline for StickersAPI
+# Docs: https://buildkite.com/docs/pipelines
+#
+# Required Buildkite environment variables:
+#   NPM_TOKEN      npm automation token with publish access to @stickerapi/sdk
+#   NPM_USER_NAME  expected npm username (stickerapi)
+#
+# The agent queue must have Docker available. Change `queue` if your agent uses
+# a different queue name.
+
+agents:
+  queue: "default"
+
+steps:
+  - label: ":node: Build SDK"
+    key: "sdk-build"
+    timeout_in_minutes: 15
+    plugins:
+      - docker#v5.8.0:
+          image: "node:22"
+          workdir: "/app"
+    command:
+      - "cd sdk"
+      - "npm ci"
+      - "npm run build"
+      - "npm run typecheck"
+
+  - label: ":discord: Check Discord bot"
+    key: "bot-check"
+    timeout_in_minutes: 10
+    plugins:
+      - docker#v5.8.0:
+          image: "node:22"
+          workdir: "/app"
+    command:
+      - "node --check examples/discord-bot/index.js"
+
+  - label: ":npm: Publish SDK to npm"
+    key: "npm-publish"
+    depends_on: "sdk-build"
+    if: build.tag != null
+    timeout_in_minutes: 20
+    plugins:
+      - docker#v5.8.0:
+          image: "node:22"
+          workdir: "/app"
+          environment:
+            - "NPM_TOKEN"
+            - "NPM_USER_NAME"
+    command:
+      - ".buildkite/publish-sdk.sh"
