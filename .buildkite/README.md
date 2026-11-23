@@ -66,4 +66,5 @@ Approval requires 2FA. You can also approve in the **Staged Packages** tab on np
 - `NPM_TOKEN is not configured`: add the environment variable to the pipeline or the build.
 - `NPM_TOKEN belongs to ...`: the token is for a different npm user than `NPM_USER_NAME`.
 - `403 Forbidden`: the token lacks publish rights, or the package name `stickersapi` is unavailable.
+- `The request IP is not allowed for this token`: add the agent host's public IPv4/IPv6 to the token allowlist in Buildkite (Organization or Cluster agent token settings), or create an agent token without IP restrictions.
 - Docker plugin errors: make sure the agent has Docker and the `default` queue.
