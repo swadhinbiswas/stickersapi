@@ -53,5 +53,5 @@ To publish the current `0.1.0` release, create a Buildkite build for the existin
 
 - `NPM_TOKEN is not configured`: add the environment variable to the pipeline or the build.
 - `NPM_TOKEN belongs to ...`: the token is for a different npm user than `NPM_USER_NAME`.
-- `403 Forbidden`: the npm user does not own the `@stickerapi` scope, or the token lacks publish rights.
+- `403 Forbidden`: the token lacks publish rights, or the package name `stickersapi` is unavailable.
 - Docker plugin errors: make sure the agent has Docker and the `default` queue.
