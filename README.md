@@ -16,6 +16,7 @@
   <a href="https://stickerapi.sbs/docs"><img src="https://img.shields.io/badge/docs-read-8B5CF6?style=flat-square" alt="Documentation" /></a>
   <a href="https://stickerapi.sbs/reference"><img src="https://img.shields.io/badge/reference-try%20it-8B5CF6?style=flat-square" alt="Interactive reference" /></a>
   <a href="https://stickerapi.sbs/api/health"><img src="https://img.shields.io/badge/API-live-22C55E?style=flat-square" alt="API live" /></a>
+  <a href="https://www.npmjs.com/package/stickersapi"><img src="https://img.shields.io/npm/v/stickersapi?style=flat-square&color=CB3837&logo=npm&logoColor=white" alt="npm package" /></a>
   <a href="https://github.com/swadhinbiswas/stickersapi/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-8B5CF6?style=flat-square" alt="MIT license" /></a>
   <a href="https://github.com/swadhinbiswas/stickersapi/releases"><img src="https://img.shields.io/github/v/release/swadhinbiswas/stickersapi?style=flat-square&color=8B5CF6" alt="Latest release" /></a>
   <a href="https://buildkite.com/"><img src="https://img.shields.io/badge/CI-Buildkite-14CC80?style=flat-square&logo=buildkite&logoColor=white" alt="CI: Buildkite" /></a>
@@ -66,7 +67,7 @@ npm run build
 npm install /path/to/stickersapi/sdk
 ```
 
-When the package is published to npm:
+Install from npm:
 
 ```bash
 npm install stickersapi
@@ -276,6 +277,7 @@ The public API handles caching, coalescing, rate limits and image proxying. This
 | Public API | Live at https://stickerapi.sbs/ |
 | OpenAPI | 35 operations, OpenAPI 3.1 |
 | SDK | 0.1.0 |
+| npm | `stickersapi@0.1.0` |
 | Discord bot | discord.js v14 |
 | Live endpoint checks | 45 passing |
 | Runtime | Cloudflare Workers |

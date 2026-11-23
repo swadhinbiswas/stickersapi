@@ -1,6 +1,8 @@
 # StickersAPI SDK
 
-Zero-dependency TypeScript client for [StickersAPI](https://stickerapi.sbs): stickers.gg stickers and packs, 7TV/BTTV/FFZ emotes, Telegram sticker sets, and pfps.gg profile pictures and banners.
+Zero-dependency TypeScript client for [StickersAPI](https://stickerapi.sbs). Package: [`stickersapi`](https://www.npmjs.com/package/stickersapi).
+
+Covers: stickers.gg stickers and packs, 7TV/BTTV/FFZ emotes, Telegram sticker sets, and pfps.gg profile pictures and banners.
 
 Works in Node 18+, browsers, Cloudflare Workers, Bun and Deno.
 
@@ -20,7 +22,7 @@ Then in another project:
 npm install /path/to/stickersapi/sdk
 ```
 
-When published to npm:
+Install from npm:
 
 ```bash
 npm install stickersapi

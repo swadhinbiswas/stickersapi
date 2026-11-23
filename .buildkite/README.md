@@ -49,6 +49,18 @@ Buildkite checks that the tag matches `sdk/package.json`, verifies the npm user,
 
 To publish the current `0.1.0` release, create a Buildkite build for the existing `v0.1.0` tag after the pipeline is connected.
 
+## npm staged publishing
+
+New npm packages can be staged for review. If the registry shows `0.0.0-stage`, the real version is waiting for a maintainer:
+
+```bash
+npm stage list stickersapi
+npm stage view <stage-id>
+npm stage approve <stage-id>
+```
+
+Approval requires 2FA. You can also approve in the **Staged Packages** tab on npmjs.com. The CI script detects the placeholder and does not republish automatically.
+
 ## Troubleshooting
 
 - `NPM_TOKEN is not configured`: add the environment variable to the pipeline or the build.

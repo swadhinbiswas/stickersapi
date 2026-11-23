@@ -42,6 +42,15 @@ fi
 npm ci
 npm run build
 
+LATEST_VERSION="$(npm view stickersapi dist-tags.latest 2>/dev/null || true)"
+if [ "$LATEST_VERSION" = "0.0.0-stage" ]; then
+  echo "npm has a staged placeholder for stickersapi."
+  echo "A maintainer must approve the pending release with 2FA:"
+  echo "  npm stage list stickersapi"
+  echo "  npm stage approve <stage-id>"
+  exit 0
+fi
+
 PUBLISHED_VERSION="$(npm view stickersapi version 2>/dev/null || true)"
 if [ "$PUBLISHED_VERSION" = "$PACKAGE_VERSION" ]; then
   echo "stickersapi@$PACKAGE_VERSION is already published; nothing to do."
@@ -51,4 +60,12 @@ fi
 echo "Publishing stickersapi@$PACKAGE_VERSION"
 npm publish --access public
 
-echo "Published stickersapi@$PACKAGE_VERSION"
+LATEST_AFTER="$(npm view stickersapi dist-tags.latest 2>/dev/null || true)"
+if [ "$LATEST_AFTER" = "$PACKAGE_VERSION" ]; then
+  echo "Published stickersapi@$PACKAGE_VERSION and updated the latest tag."
+else
+  echo "npm accepted stickersapi@$PACKAGE_VERSION, but latest is '$LATEST_AFTER'."
+  echo "If npm staged the release, approve it with 2FA:"
+  echo "  npm stage list stickersapi"
+  echo "  npm stage approve <stage-id>"
+fi
