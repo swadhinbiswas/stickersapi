@@ -295,7 +295,7 @@ node --check examples/discord-bot/index.js
 
 ## CI/CD
 
-Buildkite builds the SDK, checks the Discord bot and publishes `@stickerapi/sdk` to npm on version tags.
+The included Buildkite pipeline builds the SDK, checks the Discord bot and publishes `@stickerapi/sdk` to npm on version tags.
 
 - Pipeline: [`.buildkite/pipeline.yml`](.buildkite/pipeline.yml)
 - Publish script: [`.buildkite/publish-sdk.sh`](.buildkite/publish-sdk.sh)
